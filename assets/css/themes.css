@@ -1,0 +1,133 @@
+:root{
+    --bg:#000;
+    --text:#fff;
+    --accent:#fff;
+    --border:#fff;
+    --hover:rgba(255,255,255,.12);
+    --nav:rgba(0,0,0,.45);
+    --toolbar:#000;
+    --input-focus:#dcdcdc;
+}
+
+[data-theme="pink"]{
+    --bg:#1d0018;
+    --text:#ffd8ef;
+    --accent:#ff69b4;
+    --border:#ff69b4;
+    --hover:rgba(255,105,180,.2);
+    --nav:rgba(30,0,20,.65);
+    --toolbar:#22001b;
+    --input-focus:#ffd8ef;
+}
+
+[data-theme="blue"]{
+    --bg:#07131f;
+    --text:#d7ecff;
+    --accent:#4aa8ff;
+    --border:#4aa8ff;
+    --hover:rgba(74,168,255,.18);
+    --nav:rgba(7,19,31,.65);
+    --toolbar:#091b2d;
+    --input-focus:#d7ecff;
+}
+
+
+
+[data-theme="sunset"]{
+    --bg:#2a1b16;
+    --text:#ffe8d4;
+    --accent:#ff8c42;
+    --border:#ff8c42;
+    --hover:rgba(255,140,66,.18);
+    --nav:rgba(42,27,22,.65);
+    --toolbar:#35221b;
+    --input-focus:#fff2e8;
+}
+
+
+
+[data-theme="forest"]{
+    --bg:#132018;
+    --text:#d8f7dc;
+    --accent:#54d17a;
+    --border:#54d17a;
+    --hover:rgba(84,209,122,.15);
+    --nav:rgba(19,32,24,.65);
+    --toolbar:#18271d;
+    --input-focus:#edfdf0;
+}
+
+
+
+[data-theme="lavender"]{
+    --bg:#221d30;
+    --text:#f2eaff;
+    --accent:#b88cff;
+    --border:#b88cff;
+    --hover:rgba(184,140,255,.18);
+    --nav:rgba(34,29,48,.65);
+    --toolbar:#2b243d;
+    --input-focus:#ffffff;
+}
+
+
+
+[data-theme="storm"]{
+    --bg:#161b22;
+    --text:#d0d8e4;
+    --accent:#6f8ba8;
+    --border:#6f8ba8;
+    --hover:rgba(111,139,168,.15);
+    --nav:rgba(22,27,34,.75);
+    --toolbar:#1b212a;
+    --input-focus:#e5edf7;
+}
+
+
+
+[data-theme="midnight"]{
+    --bg:#090b10;
+    --text:#d4d7e2;
+    --accent:#445cff;
+    --border:#445cff;
+    --hover:rgba(68,92,255,.18);
+    --nav:rgba(9,11,16,.72);
+    --toolbar:#0f131c;
+    --input-focus:#eef2ff;
+}
+
+
+
+[data-theme="obsidian"]{
+    --bg:#050505;
+    --text:#dddddd;
+    --accent:#888888;
+    --border:#555555;
+    --hover:rgba(255,255,255,.06);
+    --nav:rgba(5,5,5,.72);
+    --toolbar:#101010;
+    --input-focus:#ffffff;
+}
+
+[data-theme="bunny"]{
+    --bg-image:url("/assets/images/bunner.png");
+    --text:#fff;
+    --accent:#fff;
+    --border:#fff;
+    --hover:rgba(255,255,255,.12);
+    --nav:rgba(0,0,0,.45);
+    --toolbar:#000;
+    --input-focus:#dcdcdc;
+}
+
+[data-theme="miku"]{
+    --bg:#0f1d22;
+    --text:#eaffff;
+    --accent:#39d8d0;
+    --border:#39d8d0;
+    --hover:rgba(57,216,208,.18);
+    --nav:rgba(15,29,34,.65);
+    --toolbar:#12262c;
+    --input-focus:#ffffff;
+    --character:url("assets/images/miku.png");
+}
