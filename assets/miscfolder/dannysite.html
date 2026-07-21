@@ -1,0 +1,928 @@
+<!-- ALL THE SHIT THAT WAS MADE HERE WAS BY DANNY -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARCADE // UNBLOCKED</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0e14;
+    --panel:#11161f;
+    --panel-2:#161c28;
+    --line:#242c3d;
+    --text:#e7ecf3;
+    --muted:#7c8494;
+    --accent:#4deaff;
+    --accent-2:#ff3fa4;
+    --accent-3:#ffb84d;
+    --good:#5dffa0;
+    --bad:#ff5d6c;
+    --font-display:'Press Start 2P', monospace;
+    --font-body:'JetBrains Mono', monospace;
+  }
+  body[data-theme="terminal"]{
+    --bg:#050807; --panel:#0a120d; --panel-2:#0e1811; --line:#1c3324;
+    --text:#c9ffd8; --muted:#5f8f74; --accent:#39ff6a; --accent-2:#0fe0a4; --accent-3:#a8ff9e;
+  }
+  body[data-theme="sunset"]{
+    --bg:#160c14; --panel:#1e1119; --panel-2:#26141f; --line:#3a1e2e;
+    --text:#ffe9d6; --muted:#a67c8d; --accent:#ff7a59; --accent-2:#ff3f8f; --accent-3:#ffd166;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    min-height:100vh;
+    position:relative;
+    overflow-x:hidden;
+    transition:background .3s ease,color .3s ease;
+  }
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    pointer-events:none;
+    background:repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.025) 0px,
+      rgba(255,255,255,0.025) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    z-index:9999;
+    mix-blend-mode:overlay;
+  }
+
+  .wrap{max-width:960px;margin:0 auto;padding:28px 20px 80px;}
+
+  header{
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+    padding:20px 0 30px;
+    text-align:center;
+  }
+  .logo{
+    font-family:var(--font-display);
+    font-size:26px;
+    letter-spacing:2px;
+    color:var(--accent);
+    text-shadow:0 0 8px color-mix(in srgb, var(--accent) 60%, transparent), 0 0 20px color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+  .logo .blip{
+    display:inline-block;
+    animation:blink 1.1s steps(1) infinite;
+    color:var(--accent-2);
+  }
+  @keyframes blink{50%{opacity:0;}}
+  .tagline{
+    font-size:11px;
+    color:var(--muted);
+    letter-spacing:1px;
+  }
+
+  nav.tabs{
+    display:flex; justify-content:center; gap:14px;
+    margin-bottom:28px;
+  }
+  .tab-btn{
+    font-family:var(--font-display);
+    font-size:11px;
+    background:var(--panel);
+    color:var(--muted);
+    border:2px solid var(--line);
+    padding:12px 20px;
+    cursor:pointer;
+    letter-spacing:1px;
+    position:relative;
+    transition:all .15s ease;
+  }
+  .tab-btn:hover{color:var(--text); border-color:var(--accent);}
+  .tab-btn.active{
+    color:var(--bg);
+    background:var(--accent);
+    border-color:var(--accent);
+    box-shadow:0 0 16px color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+
+  .view{display:none;}
+  .view.active{display:block; animation:fadeIn .25s ease;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
+
+  .games-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(210px,1fr));
+    gap:18px;
+  }
+  .cab{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:6px;
+    overflow:hidden;
+    display:flex; flex-direction:column;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .cab:hover{transform:translateY(-3px); border-color:var(--accent);}
+  .cab .marquee{
+    height:6px;
+    background:linear-gradient(90deg, var(--accent), var(--accent-2));
+  }
+  .cab .cab-body{padding:18px; display:flex; flex-direction:column; gap:10px; flex:1;}
+  .cab .icon{font-size:30px; line-height:1;}
+  .cab h3{
+    font-family:var(--font-display);
+    font-size:12px;
+    margin:0;
+    letter-spacing:.5px;
+  }
+  .cab p.desc{font-size:12px; color:var(--muted); margin:0; line-height:1.5;}
+  .cab .score-line{font-size:11px; color:var(--accent-3); margin-top:auto;}
+  .play-btn{
+    font-family:var(--font-display);
+    font-size:10px;
+    background:transparent;
+    color:var(--accent);
+    border:1px solid var(--accent);
+    padding:10px;
+    cursor:pointer;
+    letter-spacing:1px;
+    transition:all .15s ease;
+  }
+  .play-btn:hover{background:var(--accent); color:var(--bg);}
+
+  .screen-wrap{display:none; margin-top:24px;}
+  .screen-wrap.active{display:block; animation:powerOn .35s ease;}
+  @keyframes powerOn{
+    0%{opacity:0; transform:scaleY(.02);}
+    40%{opacity:1; transform:scaleY(1.02);}
+    100%{transform:scaleY(1);}
+  }
+  .bezel{
+    background:var(--panel-2);
+    border:3px solid var(--line);
+    border-radius:14px;
+    padding:16px;
+    box-shadow:inset 0 0 30px rgba(0,0,0,.5);
+  }
+  .bezel-top{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:14px;
+  }
+  .bezel-top .title-group{display:flex; align-items:center; gap:10px;}
+  .power-dot{width:8px; height:8px; border-radius:50%; background:var(--good); box-shadow:0 0 6px var(--good);}
+  .bezel-top h2{
+    font-family:var(--font-display);
+    font-size:13px;
+    margin:0;
+  }
+  .back-btn{
+    font-family:var(--font-body);
+    font-size:11px;
+    background:transparent;
+    color:var(--muted);
+    border:1px solid var(--line);
+    padding:6px 12px;
+    border-radius:4px;
+    cursor:pointer;
+  }
+  .back-btn:hover{color:var(--text); border-color:var(--accent);}
+
+  .game-stage{
+    background:var(--bg);
+    border-radius:8px;
+    padding:16px;
+    display:flex; flex-direction:column; align-items:center; gap:12px;
+    min-height:260px;
+  }
+  .hud{display:flex; gap:20px; font-size:12px; color:var(--muted); flex-wrap:wrap; justify-content:center;}
+  .hud b{color:var(--accent-3);}
+
+  canvas{background:#000; border:1px solid var(--line); border-radius:4px; touch-action:none;}
+
+  .settings-panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:24px;
+    display:flex; flex-direction:column; gap:22px;
+    max-width:520px;
+    margin:0 auto;
+  }
+  .setting-row{display:flex; align-items:center; justify-content:space-between; gap:16px;}
+  .setting-row .label{font-size:13px;}
+  .setting-row .sub{font-size:11px; color:var(--muted); margin-top:2px;}
+  .swatches{display:flex; gap:8px;}
+  .swatch{
+    width:28px; height:28px; border-radius:50%; cursor:pointer;
+    border:2px solid transparent;
+  }
+  .swatch.selected{border-color:var(--text);}
+  .swatch[data-theme="neon"]{background:linear-gradient(135deg,#4deaff,#ff3fa4);}
+  .swatch[data-theme="terminal"]{background:linear-gradient(135deg,#39ff6a,#0fe0a4);}
+  .swatch[data-theme="sunset"]{background:linear-gradient(135deg,#ff7a59,#ff3f8f);}
+
+  .toggle{
+    width:44px; height:24px; border-radius:12px; background:var(--line);
+    position:relative; cursor:pointer; border:none; flex-shrink:0;
+  }
+  .toggle .knob{
+    position:absolute; top:2px; left:2px; width:20px; height:20px; border-radius:50%;
+    background:var(--muted); transition:all .15s ease;
+  }
+  .toggle.on{background:color-mix(in srgb, var(--accent) 40%, transparent);}
+  .toggle.on .knob{left:22px; background:var(--accent);}
+
+  select, .seg{
+    font-family:var(--font-body);
+    background:var(--panel-2);
+    color:var(--text);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:6px 10px;
+    font-size:12px;
+  }
+  .seg{display:flex; gap:4px; padding:3px;}
+  .seg button{
+    background:transparent; border:none; color:var(--muted);
+    font-family:var(--font-body); font-size:11px; padding:6px 10px; border-radius:3px; cursor:pointer;
+  }
+  .seg button.active{background:var(--accent); color:var(--bg);}
+
+  .reset-btn{
+    font-family:var(--font-body); font-size:12px;
+    background:transparent; color:var(--bad); border:1px solid var(--bad);
+    padding:9px 14px; border-radius:4px; cursor:pointer; align-self:flex-start;
+  }
+  .reset-btn:hover{background:var(--bad); color:#1a0505;}
+
+  hr.div{border:none; border-top:1px solid var(--line); margin:0;}
+
+  /* Tic-tac-toe */
+  .ttt-grid{display:grid; grid-template-columns:repeat(3,72px); grid-template-rows:repeat(3,72px); gap:6px;}
+  .ttt-cell{
+    background:var(--panel); border:1px solid var(--line); border-radius:4px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-display); font-size:26px; cursor:pointer; color:var(--accent);
+  }
+  .ttt-cell.o{color:var(--accent-2);}
+  .ttt-cell:hover{border-color:var(--accent);}
+
+  /* 2048 */
+  .g2048{display:grid; grid-template-columns:repeat(4,70px); grid-template-rows:repeat(4,70px); gap:8px; background:var(--panel-2); padding:8px; border-radius:6px;}
+  .g2048 .tile{
+    background:var(--line); border-radius:4px; display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-body); font-weight:700; font-size:18px; color:var(--text);
+  }
+  .g2048 .tile[data-v="0"]{background:var(--panel-2);}
+
+  /* Memory */
+  .mem-grid{display:grid; grid-template-columns:repeat(4,60px); grid-template-rows:repeat(4,60px); gap:8px;}
+  .mem-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:4px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    font-size:22px; color:var(--accent);
+  }
+  .mem-card.hidden-face{color:transparent; background:var(--panel-2);}
+  .mem-card.matched{border-color:var(--good); opacity:.55; cursor:default;}
+
+  .msg-line{font-size:12px; color:var(--accent-3); min-height:16px; text-align:center;}
+
+  footer{text-align:center; color:var(--muted); font-size:11px; margin-top:50px;}
+  a{color:inherit;}
+
+  @media (max-width:480px){
+    .ttt-grid{grid-template-columns:repeat(3,64px); grid-template-rows:repeat(3,64px);}
+    .g2048{grid-template-columns:repeat(4,58px); grid-template-rows:repeat(4,58px);}
+    .mem-grid{grid-template-columns:repeat(4,52px); grid-template-rows:repeat(4,52px);}
+  }
+</style>
+</head>
+<body data-theme="neon">
+<div class="wrap">
+
+  <header>
+    <div class="logo">ARCADE<span class="blip">://</span>UNBLOCKED</div>
+    <div class="tagline">insert coin. nobody's watching.</div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-view="games">GAMES</button>
+    <button class="tab-btn" data-view="settings">SETTINGS</button>
+  </nav>
+
+  <!-- GAMES VIEW -->
+  <section id="view-games" class="view active">
+
+    <div id="games-grid" class="games-grid">
+      <div class="cab" data-game="snake">
+        <div class="marquee"></div>
+        <div class="cab-body">
+          <div class="icon">▲</div>
+          <h3>SNAKE</h3>
+          <p class="desc">Eat, grow, don't bite yourself.</p>
+          <div class="score-line">best: <span id="best-snake">0</span></div>
+          <button class="play-btn">PLAY</button>
+        </div>
+      </div>
+
+      <div class="cab" data-game="g2048">
+        <div class="marquee"></div>
+        <div class="cab-body">
+          <div class="icon">▦</div>
+          <h3>2048</h3>
+          <p class="desc">Slide tiles, chase the number.</p>
+          <div class="score-line">best: <span id="best-2048">0</span></div>
+          <button class="play-btn">PLAY</button>
+        </div>
+      </div>
+
+      <div class="cab" data-game="ttt">
+        <div class="marquee"></div>
+        <div class="cab-body">
+          <div class="icon">✕</div>
+          <h3>TIC TAC TOE</h3>
+          <p class="desc">You vs the house AI.</p>
+          <div class="score-line"><span id="rec-ttt">0W / 0L / 0D</span></div>
+          <button class="play-btn">PLAY</button>
+        </div>
+      </div>
+
+      <div class="cab" data-game="memory">
+        <div class="marquee"></div>
+        <div class="cab-body">
+          <div class="icon">◆</div>
+          <h3>MEMORY</h3>
+          <p class="desc">Flip pairs. Beat your move count.</p>
+          <div class="score-line">best: <span id="best-memory">--</span></div>
+          <button class="play-btn">PLAY</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SNAKE SCREEN -->
+    <div class="screen-wrap" id="screen-snake">
+      <div class="bezel">
+        <div class="bezel-top">
+          <div class="title-group"><span class="power-dot"></span><h2>SNAKE</h2></div>
+          <button class="back-btn" data-close>← back to games</button>
+        </div>
+        <div class="game-stage">
+          <div class="hud">score: <b id="snake-score">0</b> &nbsp; best: <b id="snake-best">0</b></div>
+          <canvas id="snake-canvas" width="360" height="360"></canvas>
+          <div class="msg-line" id="snake-msg">arrow keys / WASD to move</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2048 SCREEN -->
+    <div class="screen-wrap" id="screen-g2048">
+      <div class="bezel">
+        <div class="bezel-top">
+          <div class="title-group"><span class="power-dot"></span><h2>2048</h2></div>
+          <button class="back-btn" data-close>← back to games</button>
+        </div>
+        <div class="game-stage">
+          <div class="hud">score: <b id="g2048-score">0</b> &nbsp; best: <b id="g2048-best">0</b></div>
+          <div class="g2048" id="g2048-grid"></div>
+          <div class="msg-line" id="g2048-msg">arrow keys to slide</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TTT SCREEN -->
+    <div class="screen-wrap" id="screen-ttt">
+      <div class="bezel">
+        <div class="bezel-top">
+          <div class="title-group"><span class="power-dot"></span><h2>TIC TAC TOE</h2></div>
+          <button class="back-btn" data-close>← back to games</button>
+        </div>
+        <div class="game-stage">
+          <div class="hud">record: <b id="ttt-record">0W / 0L / 0D</b> &nbsp; difficulty: <b id="ttt-diff-label">hard</b></div>
+          <div class="ttt-grid" id="ttt-grid"></div>
+          <div class="msg-line" id="ttt-msg">your move — you're X</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEMORY SCREEN -->
+    <div class="screen-wrap" id="screen-memory">
+      <div class="bezel">
+        <div class="bezel-top">
+          <div class="title-group"><span class="power-dot"></span><h2>MEMORY MATCH</h2></div>
+          <button class="back-btn" data-close>← back to games</button>
+        </div>
+        <div class="game-stage">
+          <div class="hud">moves: <b id="mem-moves">0</b> &nbsp; best: <b id="mem-best">--</b></div>
+          <div class="mem-grid" id="mem-grid"></div>
+          <div class="msg-line" id="mem-msg">find every pair</div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- SETTINGS VIEW -->
+  <section id="view-settings" class="view">
+    <div class="settings-panel">
+
+      <div class="setting-row">
+        <div>
+          <div class="label">Theme</div>
+          <div class="sub">changes color everywhere</div>
+        </div>
+        <div class="swatches">
+          <div class="swatch selected" data-theme="neon" title="Neon"></div>
+          <div class="swatch" data-theme="terminal" title="Terminal"></div>
+          <div class="swatch" data-theme="sunset" title="Sunset"></div>
+        </div>
+      </div>
+
+      <hr class="div">
+
+      <div class="setting-row">
+        <div>
+          <div class="label">Sound effects</div>
+          <div class="sub">beeps on moves, wins, game over</div>
+        </div>
+        <button class="toggle on" id="toggle-sound"><div class="knob"></div></button>
+      </div>
+
+      <hr class="div">
+
+      <div class="setting-row">
+        <div>
+          <div class="label">Snake speed</div>
+          <div class="sub">how fast the snake moves</div>
+        </div>
+        <div class="seg" id="seg-speed">
+          <button data-val="slow">slow</button>
+          <button data-val="normal" class="active">normal</button>
+          <button data-val="fast">fast</button>
+        </div>
+      </div>
+
+      <hr class="div">
+
+      <div class="setting-row">
+        <div>
+          <div class="label">Tic-tac-toe difficulty</div>
+          <div class="sub">AI can be beatable or perfect</div>
+        </div>
+        <div class="seg" id="seg-diff">
+          <button data-val="easy">easy</button>
+          <button data-val="hard" class="active">hard</button>
+        </div>
+      </div>
+
+      <hr class="div">
+
+      <div>
+        <div class="label" style="margin-bottom:10px;">High scores</div>
+        <div class="sub" id="scores-summary">snake 0 &middot; 2048 0 &middot; tic-tac-toe 0W/0L/0D &middot; memory --</div>
+      </div>
+
+      <button class="reset-btn" id="reset-scores">reset all high scores</button>
+
+    </div>
+  </section>
+
+  <footer>built for the back row of the computer lab</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- STATE ---------- */
+  const settings = { theme:'neon', sound:true, snakeSpeed:'normal', aiDifficulty:'hard' };
+  const scores = { snake:0, g2048:0, tttWins:0, tttLosses:0, tttDraws:0, memoryBest:null };
+
+  /* ---------- SOUND ---------- */
+  let actx;
+  function beep(freq, dur, type){
+    if(!settings.sound) return;
+    try{
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      const o = actx.createOscillator();
+      const g = actx.createGain();
+      o.type = type || 'square';
+      o.frequency.value = freq;
+      g.gain.value = 0.05;
+      o.connect(g); g.connect(actx.destination);
+      o.start();
+      g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + dur);
+      o.stop(actx.currentTime + dur);
+    }catch(e){}
+  }
+
+  /* ---------- TABS ---------- */
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+      document.getElementById('view-'+btn.dataset.view).classList.add('active');
+    });
+  });
+
+  /* ---------- GAME LAUNCH / CLOSE ---------- */
+  const gamesGrid = document.getElementById('games-grid');
+  document.querySelectorAll('.cab').forEach(cab=>{
+    cab.querySelector('.play-btn').addEventListener('click', ()=> launch(cab.dataset.game));
+  });
+  document.querySelectorAll('[data-close]').forEach(b=>{
+    b.addEventListener('click', closeAll);
+  });
+
+  function closeAll(){
+    document.querySelectorAll('.screen-wrap').forEach(s=>s.classList.remove('active'));
+    gamesGrid.style.display = 'grid';
+    stopSnake();
+  }
+
+  function launch(game){
+    gamesGrid.style.display = 'none';
+    document.querySelectorAll('.screen-wrap').forEach(s=>s.classList.remove('active'));
+    document.getElementById('screen-'+game).classList.add('active');
+    beep(440,.06,'square');
+    if(game==='snake') startSnake();
+    if(game==='g2048') startG2048();
+    if(game==='ttt') startTTT();
+    if(game==='memory') startMemory();
+  }
+
+  /* ================= SNAKE ================= */
+  const sCanvas = document.getElementById('snake-canvas');
+  const sCtx = sCanvas.getContext('2d');
+  const CELL = 18, COLS = 20, ROWS = 20;
+  let snake, dir, nextDir, food, snakeScore, snakeTimer, snakeAlive;
+
+  function speedMs(){
+    return settings.snakeSpeed==='slow' ? 160 : settings.snakeSpeed==='fast' ? 70 : 110;
+  }
+
+  function startSnake(){
+    snake = [{x:10,y:10},{x:9,y:10},{x:8,y:10}];
+    dir = {x:1,y:0}; nextDir = {x:1,y:0};
+    snakeScore = 0; snakeAlive = true;
+    placeFood();
+    document.getElementById('snake-score').textContent = 0;
+    document.getElementById('snake-best').textContent = scores.snake;
+    document.getElementById('snake-msg').textContent = 'arrow keys / WASD to move';
+    stopSnake();
+    snakeTimer = setInterval(snakeTick, speedMs());
+    drawSnake();
+  }
+  function stopSnake(){ if(snakeTimer) clearInterval(snakeTimer); }
+
+  function placeFood(){
+    let ok=false;
+    while(!ok){
+      food = {x:Math.floor(Math.random()*COLS), y:Math.floor(Math.random()*ROWS)};
+      ok = !snake.some(s=>s.x===food.x && s.y===food.y);
+    }
+  }
+
+  function snakeTick(){
+    if(!snakeAlive) return;
+    dir = nextDir;
+    const head = {x:snake[0].x+dir.x, y:snake[0].y+dir.y};
+    if(head.x<0||head.x>=COLS||head.y<0||head.y>=ROWS||snake.some(s=>s.x===head.x&&s.y===head.y)){
+      snakeAlive=false;
+      clearInterval(snakeTimer);
+      beep(120,.3,'sawtooth');
+      document.getElementById('snake-msg').textContent = 'game over — press R to retry';
+      if(snakeScore>scores.snake){ scores.snake=snakeScore; updateBests(); }
+      return;
+    }
+    snake.unshift(head);
+    if(head.x===food.x && head.y===food.y){
+      snakeScore++;
+      beep(660,.05,'square');
+      document.getElementById('snake-score').textContent = snakeScore;
+      placeFood();
+    } else {
+      snake.pop();
+    }
+    drawSnake();
+  }
+
+  function drawSnake(){
+    sCtx.fillStyle = '#000';
+    sCtx.fillRect(0,0,sCanvas.width,sCanvas.height);
+    sCtx.fillStyle = getCss('--accent-3');
+    sCtx.fillRect(food.x*CELL+2, food.y*CELL+2, CELL-4, CELL-4);
+    snake.forEach((s,i)=>{
+      sCtx.fillStyle = i===0 ? getCss('--accent') : getCss('--accent-2');
+      sCtx.fillRect(s.x*CELL+1, s.y*CELL+1, CELL-2, CELL-2);
+    });
+  }
+
+  function getCss(v){ return getComputedStyle(document.body).getPropertyValue(v).trim(); }
+
+  window.addEventListener('keydown', e=>{
+    if(!document.getElementById('screen-snake').classList.contains('active')) return;
+    const k = e.key.toLowerCase();
+    if((k==='arrowup'||k==='w') && dir.y!==1){ nextDir={x:0,y:-1}; e.preventDefault(); }
+    else if((k==='arrowdown'||k==='s') && dir.y!==-1){ nextDir={x:0,y:1}; e.preventDefault(); }
+    else if((k==='arrowleft'||k==='a') && dir.x!==1){ nextDir={x:-1,y:0}; e.preventDefault(); }
+    else if((k==='arrowright'||k==='d') && dir.x!==-1){ nextDir={x:1,y:0}; e.preventDefault(); }
+    else if(k==='r' && !snakeAlive){ startSnake(); }
+  });
+
+  /* ================= 2048 ================= */
+  let grid2048, score2048;
+  const gridEl = document.getElementById('g2048-grid');
+
+  function startG2048(){
+    grid2048 = Array.from({length:4}, ()=>Array(4).fill(0));
+    score2048 = 0;
+    addTile(); addTile();
+    document.getElementById('g2048-msg').textContent = 'arrow keys to slide';
+    document.getElementById('g2048-best').textContent = scores.g2048;
+    renderG2048();
+  }
+  function addTile(){
+    const empty=[];
+    for(let r=0;r<4;r++) for(let c=0;c<4;c++) if(grid2048[r][c]===0) empty.push([r,c]);
+    if(!empty.length) return;
+    const [r,c] = empty[Math.floor(Math.random()*empty.length)];
+    grid2048[r][c] = Math.random()<0.9 ? 2 : 4;
+  }
+  function renderG2048(){
+    gridEl.innerHTML='';
+    for(let r=0;r<4;r++) for(let c=0;c<4;c++){
+      const v = grid2048[r][c];
+      const d = document.createElement('div');
+      d.className='tile'; d.dataset.v=v;
+      d.textContent = v||'';
+      if(v>=128) d.style.color = getCss('--accent');
+      gridEl.appendChild(d);
+    }
+    document.getElementById('g2048-score').textContent = score2048;
+  }
+  function slideRow(row){
+    let vals = row.filter(v=>v!==0);
+    for(let i=0;i<vals.length-1;i++){
+      if(vals[i]===vals[i+1]){ vals[i]*=2; score2048+=vals[i]; vals.splice(i+1,1); }
+    }
+    while(vals.length<4) vals.push(0);
+    return vals;
+  }
+  function rotateGrid(g){
+    const n = Array.from({length:4}, ()=>Array(4).fill(0));
+    for(let r=0;r<4;r++) for(let c=0;c<4;c++) n[c][3-r]=g[r][c];
+    return n;
+  }
+  function move2048(direction){
+    let g = grid2048.map(r=>r.slice());
+    let rotations = {left:0, up:3, right:2, down:1}[direction];
+    for(let i=0;i<rotations;i++) g = rotateGrid(g);
+    const before = JSON.stringify(g);
+    g = g.map(slideRow);
+    const after = JSON.stringify(g);
+    for(let i=0;i<(4-rotations)%4;i++) g = rotateGrid(g);
+    if(before!==after){
+      grid2048 = g;
+      addTile();
+      beep(300,.04,'square');
+      renderG2048();
+      if(score2048>scores.g2048){ scores.g2048=score2048; updateBests(); }
+      checkG2048End();
+    }
+  }
+  function checkG2048End(){
+    const hasEmpty = grid2048.some(r=>r.some(v=>v===0));
+    if(hasEmpty) return;
+    for(let r=0;r<4;r++) for(let c=0;c<4;c++){
+      const v = grid2048[r][c];
+      if(c<3 && grid2048[r][c+1]===v) return;
+      if(r<3 && grid2048[r+1][c]===v) return;
+    }
+    document.getElementById('g2048-msg').textContent = 'no more moves — game over';
+    beep(120,.3,'sawtooth');
+  }
+  window.addEventListener('keydown', e=>{
+    if(!document.getElementById('screen-g2048').classList.contains('active')) return;
+    const map = {arrowleft:'left', arrowright:'right', arrowup:'up', arrowdown:'down'};
+    const d = map[e.key.toLowerCase()];
+    if(d){ e.preventDefault(); move2048(d); }
+  });
+
+  /* ================= TIC TAC TOE ================= */
+  let tttBoard, tttOver;
+  const tttGridEl = document.getElementById('ttt-grid');
+  const WIN_LINES = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+  function startTTT(){
+    tttBoard = Array(9).fill(null);
+    tttOver = false;
+    document.getElementById('ttt-msg').textContent = "your move — you're X";
+    document.getElementById('ttt-diff-label').textContent = settings.aiDifficulty;
+    renderRecord();
+    renderTTT();
+  }
+  function renderTTT(){
+    tttGridEl.innerHTML='';
+    tttBoard.forEach((v,i)=>{
+      const c = document.createElement('div');
+      c.className = 'ttt-cell' + (v==='O' ? ' o':'');
+      c.textContent = v||'';
+      if(!v && !tttOver) c.addEventListener('click', ()=>tttPlayerMove(i));
+      tttGridEl.appendChild(c);
+    });
+  }
+  function tttPlayerMove(i){
+    if(tttBoard[i] || tttOver) return;
+    tttBoard[i]='X';
+    beep(520,.05,'square');
+    renderTTT();
+    if(checkTTTEnd()) return;
+    setTimeout(tttAiMove, 300);
+  }
+  function checkTTTEnd(){
+    const w = tttWinner(tttBoard);
+    if(w){
+      tttOver=true;
+      if(w==='X'){ scores.tttWins++; document.getElementById('ttt-msg').textContent='you win!'; beep(880,.15,'square'); }
+      else { scores.tttLosses++; document.getElementById('ttt-msg').textContent='house wins.'; beep(150,.3,'sawtooth'); }
+      renderRecord(); renderTTT(); updateBests();
+      return true;
+    }
+    if(tttBoard.every(v=>v)){
+      tttOver=true; scores.tttDraws++;
+      document.getElementById('ttt-msg').textContent='draw.';
+      renderRecord(); renderTTT(); updateBests();
+      return true;
+    }
+    return false;
+  }
+  function tttWinner(b){
+    for(const [a,c,d] of WIN_LINES){
+      if(b[a] && b[a]===b[c] && b[a]===b[d]) return b[a];
+    }
+    return null;
+  }
+  function tttAiMove(){
+    if(tttOver) return;
+    let move;
+    const empties = tttBoard.map((v,i)=>v?null:i).filter(v=>v!==null);
+    if(settings.aiDifficulty==='easy'){
+      move = empties[Math.floor(Math.random()*empties.length)];
+    } else {
+      move = bestMove(tttBoard);
+    }
+    tttBoard[move]='O';
+    beep(340,.05,'square');
+    renderTTT();
+    checkTTTEnd();
+  }
+  function bestMove(board){
+    let best=-Infinity, move=null;
+    for(let i=0;i<9;i++){
+      if(!board[i]){
+        board[i]='O';
+        const s = minimax(board, 0, false);
+        board[i]=null;
+        if(s>best){ best=s; move=i; }
+      }
+    }
+    return move;
+  }
+  function minimax(board, depth, isMax){
+    const w = tttWinner(board);
+    if(w==='O') return 10-depth;
+    if(w==='X') return depth-10;
+    if(board.every(v=>v)) return 0;
+    if(isMax){
+      let best=-Infinity;
+      for(let i=0;i<9;i++) if(!board[i]){ board[i]='O'; best=Math.max(best, minimax(board,depth+1,false)); board[i]=null; }
+      return best;
+    } else {
+      let best=Infinity;
+      for(let i=0;i<9;i++) if(!board[i]){ board[i]='X'; best=Math.min(best, minimax(board,depth+1,true)); board[i]=null; }
+      return best;
+    }
+  }
+  function renderRecord(){
+    const txt = `${scores.tttWins}W / ${scores.tttLosses}L / ${scores.tttDraws}D`;
+    document.getElementById('ttt-record').textContent = txt;
+    document.getElementById('rec-ttt').textContent = txt;
+  }
+
+  /* ================= MEMORY MATCH ================= */
+  const MEM_SYMBOLS = ['★','●','▲','■','◆','♫','☀','☂'];
+  let memCards, memFlipped, memMatched, memMoves, memLock;
+  const memGridEl = document.getElementById('mem-grid');
+
+  function startMemory(){
+    const deck = [...MEM_SYMBOLS, ...MEM_SYMBOLS];
+    for(let i=deck.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [deck[i],deck[j]]=[deck[j],deck[i]]; }
+    memCards = deck.map(s=>({symbol:s, matched:false}));
+    memFlipped=[]; memMatched=0; memMoves=0; memLock=false;
+    document.getElementById('mem-moves').textContent = 0;
+    document.getElementById('mem-best').textContent = scores.memoryBest ?? '--';
+    document.getElementById('mem-msg').textContent = 'find every pair';
+    renderMemory();
+  }
+  function renderMemory(){
+    memGridEl.innerHTML='';
+    memCards.forEach((card,i)=>{
+      const el = document.createElement('div');
+      const isOpen = card.matched || memFlipped.includes(i);
+      el.className = 'mem-card' + (isOpen ? '' : ' hidden-face') + (card.matched ? ' matched' : '');
+      el.textContent = isOpen ? card.symbol : '?';
+      if(!isOpen) el.addEventListener('click', ()=>flipMemory(i));
+      memGridEl.appendChild(el);
+    });
+  }
+  function flipMemory(i){
+    if(memLock || memFlipped.includes(i) || memCards[i].matched) return;
+    memFlipped.push(i);
+    beep(500,.04,'square');
+    renderMemory();
+    if(memFlipped.length===2){
+      memMoves++;
+      document.getElementById('mem-moves').textContent = memMoves;
+      memLock=true;
+      const [a,b] = memFlipped;
+      if(memCards[a].symbol===memCards[b].symbol){
+        memCards[a].matched=true; memCards[b].matched=true;
+        memMatched++;
+        memFlipped=[]; memLock=false;
+        beep(700,.08,'square');
+        renderMemory();
+        if(memMatched===MEM_SYMBOLS.length){
+          document.getElementById('mem-msg').textContent = `cleared in ${memMoves} moves`;
+          if(scores.memoryBest===null || memMoves<scores.memoryBest){ scores.memoryBest=memMoves; updateBests(); }
+        }
+      } else {
+        setTimeout(()=>{ memFlipped=[]; memLock=false; renderMemory(); }, 650);
+      }
+    }
+  }
+
+  /* ---------- SETTINGS WIRES ---------- */
+  document.querySelectorAll('.swatch').forEach(sw=>{
+    sw.addEventListener('click', ()=>{
+      settings.theme = sw.dataset.theme;
+      document.body.dataset.theme = settings.theme;
+      document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('selected'));
+      sw.classList.add('selected');
+      beep(400,.04,'sine');
+    });
+  });
+
+  const soundToggle = document.getElementById('toggle-sound');
+  soundToggle.addEventListener('click', ()=>{
+    settings.sound = !settings.sound;
+    soundToggle.classList.toggle('on', settings.sound);
+    beep(500,.05,'sine');
+  });
+
+  document.querySelectorAll('#seg-speed button').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      settings.snakeSpeed = b.dataset.val;
+      document.querySelectorAll('#seg-speed button').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      beep(400,.04,'sine');
+    });
+  });
+
+  document.querySelectorAll('#seg-diff button').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      settings.aiDifficulty = b.dataset.val;
+      document.querySelectorAll('#seg-diff button').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      beep(400,.04,'sine');
+    });
+  });
+
+  document.getElementById('reset-scores').addEventListener('click', ()=>{
+    scores.snake=0; scores.g2048=0; scores.tttWins=0; scores.tttLosses=0; scores.tttDraws=0; scores.memoryBest=null;
+    updateBests();
+    renderRecord();
+    beep(200,.2,'sawtooth');
+  });
+
+  function updateBests(){
+    document.getElementById('best-snake').textContent = scores.snake;
+    document.getElementById('best-2048').textContent = scores.g2048;
+    document.getElementById('best-memory').textContent = scores.memoryBest ?? '--';
+    document.getElementById('rec-ttt').textContent = `${scores.tttWins}W / ${scores.tttLosses}L / ${scores.tttDraws}D`;
+    document.getElementById('snake-best').textContent = scores.snake;
+    document.getElementById('g2048-best').textContent = scores.g2048;
+    document.getElementById('mem-best').textContent = scores.memoryBest ?? '--';
+    document.getElementById('scores-summary').textContent =
+      `snake ${scores.snake} · 2048 ${scores.g2048} · tic-tac-toe ${scores.tttWins}W/${scores.tttLosses}L/${scores.tttDraws}D · memory ${scores.memoryBest ?? '--'}`;
+  }
+  updateBests();
+
+})();
+</script>
+</body>
+</html>
