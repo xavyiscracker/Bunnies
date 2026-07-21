@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GJCH2QLBGR"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-GJCH2QLBGR');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bunnies</title>
+<link rel="icon" type="image/x-icon" href="/assets/images/icon.png">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root{
+    --bg:#000;
+    --text:#fff;
+    --accent:#fff;
+    --border:#fff;
+    --hover:rgba(255,255,255,.12);
+    --nav:rgba(0,0,0,.45);
+    --toolbar:#000;
+    --input-focus:#dcdcdc;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family: "Poppins", sans-serif;
+    background:var(--bg);
+    background-image:var(--bg-image, none);
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+    color:var(--text);
+    padding-top:80px;
+    text-align: center;
+}
+
+#navbar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:1;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:15px 40px;
+
+    background:var(--nav);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+
+    border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+
+#navLeft{
+    position:absolute;
+    left:20px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+#navLogo{
+    width:42px;
+    height:42px;
+    border-radius:10px;
+}
+
+#navTitle{
+    font-size:20px;
+    font-weight:500;
+    color:var(--text);
+}
+
+
+#navLinks{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+#navLinks a{
+    color:var(--text);
+    text-decoration:none;
+    font-weight:600;
+    font-family: "Poppins", sans-serif;
+    padding:6px 12px;
+    border-radius:10px;
+
+    transition:.2s ease;
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+
+#navLinks a:hover{
+    background:var(--hover);
+    color:var(--text);
+}
+
+
+.material-icons{
+    font-size:22px;
+    color:inherit;
+}
+.btn {
+  background: transparent;
+  border:2px solid var(--border);
+  color:var(--text);
+  padding: 10px 20px;
+  font-size: 16px;
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  margin: 5px;
+}
+
+.btn:hover {
+  background:var(--accent);
+    color:var(--bg);
+}
+
+#searchContainer{
+    display:flex;
+    justify-content:center;
+    margin:25px 0;
+}
+
+#searchBar{
+    width:600px;
+    max-width:90%;
+    padding:12px 18px;
+    font-size:1.1em;
+    background: transparent;
+    border:2px solid var(--border);
+    font-family: "Poppins", sans-serif;
+    color:var(--text);
+    border-radius:8px;
+    outline:none;
+    transition:.2s ease-in-out;
+}
+
+#searchBar:focus{
+    background:var(--input-focus);
+    transform:scale(1.01);
+}
+
+#searchBar::placeholder{
+    color:var(--text);
+}
+
+
+
+#imageGrid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+#imageGrid .image-card {
+    width: 220px;
+}
+
+.imageCard{
+    width:200px;
+    background:transparent;
+    border:2px solid var(--border);
+    border-radius:10px;
+    overflow:hidden;
+    cursor:pointer;
+    transition:.2s ease-in-out;
+}
+
+.imageCard:hover{
+    transform:scale(1.04);
+    background:var(--hover);
+}
+
+.imageCard img{
+    width: 200px;
+    height: 200px;
+    display:block;
+}
+
+.imageCard p{
+    padding:10px;
+    font-size:1em;
+    white-space: nowrap;
+    font-family: "Poppins", sans-serif;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#viewerModal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+}
+
+#viewerBox{
+    width:90%;
+    height:90%;
+    background:transparent;
+    border:2px solid var(--border);
+    border-radius:10px;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+}
+
+#viewerToolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px;
+    background:var(--toolbar);
+    border-bottom:2px solid var(--border);
+}
+
+#toolbarButtons{
+    display:flex;
+    gap:10px;
+}
+
+#gameTitle{
+    flex:1;
+    margin-left:20px;
+    color:var(--text);
+    font-size:18px;
+    font-weight:600;
+    font-family: "Poppins", sans-serif;
+    text-align:left;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+#viewerFrame{
+    flex:1;
+    width:100%;
+    border:none;
+    background:white;
+}
+
+main{
+    max-width:1000px;
+    margin:40px auto;
+    padding:20px;
+    text-align:center;
+}
+
+h1{
+    font-size:48px;
+    font-family: "Poppins", sans-serif;
+}
+
+a{
+    text-decoration:none;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border: 3px solid var(--bg);
+    border-radius: 999px;
+    transition: background .2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--input-focus);
+}
+
+::-webkit-scrollbar-corner {
+    background: var(--bg);
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) var(--bg);
+}
+
+::selection {
+    background: var(--accent);
+    color: var(--bg);
+}
+
+::-moz-selection {
+    background: var(--accent);
+    color: var(--bg);
+}
+</style>
+<meta property="og:title" content="Log in to Schoology">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="google-site-verification" content="6ystVr7sfpd20ctZGukFGunzOJQW7O6kJpXvzAxSEzI">
+<meta name="google-site-verification" content="9tK81P_TYDOlOx_Me0FXzEj_nQnkL9G0kQxRcG4LT7I">
+<meta name="p:domain_verify" content="d76e189f546bfd185bd2a3ec1a7f214c">
+<meta name="description" content="Schoology allows instructors, students and administrators to create a meaningful virtual classroom and extend learning beyond the boundaries of the physical classroom">
+</head>
+
+<body>
+
+<nav id="navbar">
+
+    <div id="navLeft">
+        <img src="https://cdn.jsdelivr.net/gh/xavyiscracker/bunnies@latest/assets/images/logo.gif" id="navLogo" alt="Logo">
+        <div id="navTitle">Bunnies</div>
+    </div>
+
+    <div id="navLinks">
+        <a href="Bunnies Website">Bunnies Website</a>
+        <a href="Discord">Discord</a>
+    </div>
+
+</nav>
+
+<main>
+    <h1>Bunnies</h1>
+    <br>
+    <p>Welcome to the Bunnies portable!</p>
+    <p>run Bunnies locally from your computer!</p>
+    <p>Find the download for the latest version of Bunnies portable <a style="color: #ff0000;" href="https://github.com/xavyiscracker/Bunnies/blob/main/portable.html">here</a></p>
+
+    <div id="searchContainer">
+    <input id="searchBar" placeholder="Search arcade...">
+</div>
+
+<div id="imageGrid"></div>
+
+<div id="viewerModal">
+    <div id="viewerBox">
+
+        <div id="viewerToolbar">
+            <div id="gameTitle">No game selected</div>
+
+            <div id="toolbarButtons">
+                <button class="btn" onclick="refreshFrame()">⟳ Refresh</button>
+                <button class="btn" onclick="fullscreenFrame()">⛶ Fullscreen</button>
+                <button class="btn" onclick="closeFrame()">✕ Close</button>
+            </div>
+        </div>
+
+        <iframe id="viewerFrame"></iframe>
+
+    </div>
+</div>
+
+</main>
+<script>
+    const images = [
+    {
+        title: "1 Date Danger",
+        image: "/assets/math/1datedanger/logo.png",
+        source: "/assets/math/1datedanger/"
+    },
+    {
+        title: "BFDIA 5b",
+        image: "/assets/math/bfdia5b/637.png",
+        source: "/assets/math/bfdia5b/"
+    },
+    {
+        title: "Hollow Knight",
+        image: "/assets/math/hollowknight/468.png",
+        source: "/assets/math/hollowknight/"
+    },
+    {
+        title: "Omori",
+        image: "/assets/math/omori/427.png",
+        source: "/assets/math/omori/"
+    },
+    {
+        title: "OneShot",
+        image: "/assets/math/oneshot/622.png",
+        source: "/assets/math/oneshot/"
+    },
+    {
+        title: "Silk Song",
+        image: "/assets/math/silksong/771.png",
+        source: "/assets/math/silksong/"
+    },
+    {
+        title: "Animal Crossing (GAMECUBE)",
+        image: "/assets/math/animalcrossing/828.png",
+        source: "/assets/math/animalcrossing/"
+    },
+    {
+        title: "Eaglercraft 1.8",
+        image: "/assets/math/eaglercraft1122/minecrafteagle.png",
+        source: "/assets/math/eaglercraft18/"
+    },
+    {
+        title: "Eaglercraft 1.12.2",
+        image: "/assets/math/eaglercraft1122/minecrafteagle.png",
+        source: "/assets/math/eaglercraft1122/"
+    },
+    {
+        title: "BlockPost",
+        image: "/assets/math/blockpost/273.png",
+        source: "/assets/math/blockpost/"
+    },
+    {
+        title: "OvO",
+        image: "/assets/math/ovo/1.png",
+        source: "/assets/math/ovo/"
+    },
+    {
+        title: "OvO 2",
+        image: "/assets/math/ovo2/2.png",
+        source: "/assets/math/ovo2/"
+    },
+    {
+        title: "OvO 3",
+        image: "/assets/math/ovo3/3.png",
+        source: "/assets/math/ovo3/"
+    },
+    {
+        title: "Bad Parenting",
+        image: "/assets/math/badparenting/166.png",
+        source: "/assets/math/badparenting/"
+    },
+    {
+        title: "Tattletail",
+        image: "/assets/math/tattletail/607.png",
+        source: "/assets/math/tattletail/"
+    },
+    {
+        title: "Ultrakill",
+        image: "/assets/math/ultrakill/196.png",
+        source: "/assets/math/ultrakill/"
+    },
+    {
+        title: "Half Life",
+        image: "/assets/math/halflife/262.png",
+        source: "/assets/math/halflife/"
+    },
+    {
+        title: "Terraria",
+        image: "/assets/math/terraria/669.png",
+        source: "/assets/math/terraria/"
+    },
+    {
+        title: "Just Shapes & Beats",
+        image: "/assets/math/justshapes/826.png",
+        source: "/assets/math/justshapes/"
+    },
+    {
+        title: "FNAE",
+        image: "/assets/math/fivenightsatepsteins/710.png",
+        source: "/assets/math/fivenightsatepsteins/"
+    },
+    {
+        title: "Iron Lung",
+        image: "/assets/math/ironlung/705.png",
+        source: "/assets/math/ironlung/"
+    },
+    {
+        title: "Cooking Mama",
+        image: "/assets/math/cookingmama/cookingmama.png",
+        source: "/assets/math/cookingmama/"
+    },
+    {
+        title: "20 Minutes Till Dawn",
+        image: "/assets/math/20minutestildawn/819.png",
+        source: "/assets/math/20minutestildawn/"
+    },
+    {
+        title: "2048",
+        image: "/assets/math/2048/114.png",
+        source: "/assets/math/2048/2048.html"
+    },
+    {
+        title: "2048 Merge Run",
+        image: "/assets/math/2048mergerun/375.png",
+        source: "/assets/math/2048mergerun/"
+    },
+    {
+        title: "T.A.B.S",
+        image: "/assets/math/tabs/827.png",
+        source: "/assets/math/tabs/"
+    },
+    {
+        title: "Bad Time Simulator",
+        image: "/assets/math/badtimesimulator/472.png",
+        source: "/assets/math/badtimesimulator/"
+    },
+    {
+        title: "Slope",
+        image: "/assets/math/slope/198.png",
+        source: "/assets/math/slope/"
+    },
+    {
+        title: "Slope 2",
+        image: "/assets/math/slope2/368.png",
+        source: "/assets/math/slope2/"
+    },
+    {
+        title: "Slowroads",
+        image: "/assets/math/slowroads/369.png",
+        source: "/assets/math/slowroads/"
+    },
+    {
+        title: "FNF Shucks",
+        image: "/assets/math/shucks/836.png",
+        source: "/assets/math/shucks/"
+    },
+    {
+        title: "FNF Pibby Corrupted",
+        image: "/assets/math/pibbycorrupted/700.png",
+        source: "/assets/math/pibbycorrupted/"
+    },
+    {
+        title: "FNF Bobs Onslaught",
+        image: "/assets/math/bobsonslaught/618.png",
+        source: "/assets/math/bobsonslaught/"
+    },
+    {
+        title: "FNF Wedndesdays Infidelity",
+        image: "/assets/math/wednesdaysinfidelity/616.png",
+        source: "/assets/math/wednesdaysinfidelity/"
+    },
+    {
+        title: "FNF Dave and Bambi",
+        image: "/assets/math/daveandbambi/615.png",
+        source: "/assets/math/daveandbambi/"
+    },
+    {
+        title: "FNF Sonic.exe",
+        image: "/assets/math/sonicexe/601.png",
+        source: "/assets/math/sonicexe/"
+    },
+    {
+        title: "Famidash",
+        image: "/assets/math/famidash/famidash.png",
+        source: "/assets/math/famidash/"
+    },
+    {
+        title: "Cookie Clicker",
+        image: "/assets/math/cookieclicker/82.png",
+        source: "/assets/math/cookieclicker/"
+    },
+    {
+        title: "Jetpack Joyride",
+        image: "/assets/math/jetpackjoyride/7.png",
+        source: "/assets/math/jetpackjoyride/"
+    },
+    {
+        title: "Stickman Hook",
+        image: "/assets/math/stickmanhook/11.png",
+        source: "/assets/math/stickmanhook/"
+    },
+    {
+        title: "Bridge Race",
+        image: "/assets/math/bridgerace/14.png",
+        source: "/assets/math/bridgerace/"
+    },
+    {
+        title: "Attack Hole",
+        image: "/assets/math/attackhole/13.png",
+        source: "/assets/math/attackhole/"
+    },
+    {
+        title: "Achievement Unlocked",
+        image: "/assets/math/achievementunlocked/60.png",
+        source: "/assets/math/achievementunlocked/"
+    },
+    {
+        title: "Achievement Unlocked 2",
+        image: "/assets/math/achievementunlocked2/61.png",
+        source: "/assets/math/achievementunlocked2/"
+    },
+    {
+        title: "Achievement Unlocked 3",
+        image: "/assets/math/achievementunlocked3/62.png",
+        source: "/assets/math/achievementunlocked3/"
+    },
+    {
+        title: "FNF Twiddlefinger",
+        image: "/assets/math/twiddlefinger/500.png",
+        source: "/assets/math/twiddlefinger/"
+    },
+    {
+        title: "8 Ball Pool",
+        image: "/assets/math/8ballpool/115.png",
+        source: "/assets/math/8ballpool/"
+    },
+    {
+        title: "Awesome Tanks",
+        image: "/assets/math/awesometanks/436.png",
+        source: "/assets/math/awesometanks/"
+    },
+    {
+        title: "Awesome Tanks 2",
+        image: "/assets/math/awesometanks2/438.png",
+        source: "/assets/math/awesometanks2/"
+    },
+    {
+        title: "Bad Ice Cream",
+        image: "/assets/math/badicecream/269.png",
+        source: "/assets/math/badicecream/"
+    },
+    {
+        title: "Bad Ice Cream 2",
+        image: "/assets/math/badicecream2/270.png",
+        source: "/assets/math/badicecream2/"
+    },
+    {
+        title: "Bad Ice Cream 3",
+        image: "/assets/math/badicecream3/271.png",
+        source: "/assets/math/badicecream3/"
+    }
+];
+
+const grid = document.getElementById("imageGrid");
+const search = document.getElementById("searchBar");
+
+const viewerModal = document.getElementById("viewerModal");
+const viewerFrame = document.getElementById("viewerFrame");
+const gameTitle = document.getElementById("gameTitle");
+
+// URL ?url= support
+const params = new URLSearchParams(window.location.search);
+const urlGame = params.get("url");
+
+
+function render(list) {
+    grid.innerHTML = "";
+
+    list.forEach(item => {
+
+        const card = document.createElement("div");
+        card.className = "imageCard";
+
+        card.innerHTML = `
+            <img src="${item.image}">
+            <p>${item.title}</p>
+        `;
+
+        card.onclick = () => {
+            viewerModal.style.display = "flex";
+
+            if (urlGame) {
+                viewerFrame.src = urlGame;
+                gameTitle.textContent = "External Game";
+            } else {
+                viewerFrame.src = item.source;
+                gameTitle.textContent = item.title;
+            }
+        };
+
+        grid.appendChild(card);
+
+    });
+}
+
+
+render(images);
+
+if (urlGame) {
+    viewerModal.style.display = "flex";
+    viewerFrame.src = urlGame;
+    gameTitle.textContent = "External Content on Bunnies";
+}
+
+
+search.addEventListener("input", () => {
+
+    const value = search.value.toLowerCase();
+
+    render(images.filter(image =>
+        image.title.toLowerCase().includes(value)
+    ));
+
+});
+
+
+function closeFrame() {
+    viewerModal.style.display = "none";
+    viewerFrame.src = "";
+    gameTitle.textContent = "No game selected";
+}
+
+
+function refreshFrame() {
+    viewerFrame.src = viewerFrame.src;
+}
+
+
+function fullscreenFrame() {
+    if (viewerFrame.requestFullscreen) {
+        viewerFrame.requestFullscreen();
+    }
+}
+</script>
+
+<script src="https://pl30404457.effectivecpmnetwork.com/4b/d2/e0/4bd2e0433588e2fb9d8c999fbd936f74.js"></script>
+<script src="https://pl30404458.effectivecpmnetwork.com/e6/3a/4f/e63a4fd321c6583dd16a9578d731ae66.js"></script>
+</body>
+</html>
